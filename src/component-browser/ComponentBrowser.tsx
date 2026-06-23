@@ -182,7 +182,7 @@ const CATEGORIES: Array<{
       defineEntry(FaceBubbleSafeArea, {showGuide: true}, {name: 'FaceBubbleSafeArea', source: 'D3', desc: 'Red dashed face-pip guide'}),
       defineEntry(PipFrame, {showGuide: true}, {name: 'PipFrame', source: 'D3', desc: 'White glass PiP frame'}),
       defineEntry(CaptionSafeGuide, {}, {name: 'CaptionSafeGuide', source: 'P1', desc: 'Caption safe-zone border'}),
-      defineEntry(LayoutFrame, {children: null as unknown as React.ReactNode}, {name: 'LayoutFrame', source: 'P1', desc: 'Canvas + guide + tape wrapper'}),
+      defineEntry(LayoutFrame, {children: null, showGuides: true}, {name: 'LayoutFrame', source: 'P1', desc: 'Canvas + tape wrapper (guide shown)'}),
     ],
   },
   {
@@ -206,7 +206,8 @@ const CATEGORIES: Array<{
       {name: 'PanelCard', source: 'D3', desc: 'Rounded card with accent bar', component: PanelCard, props: {left: 20, top: 20, width: 280, eyebrow: 'INFO', title: 'Card Title', children: <div style={{fontFamily: FONTS.body, fontSize: 24, color: COLORS.mutedText}}>Card content area</div>}},
       defineEntry(StickyNote, {label: 'Sticky Note', color: '#DCFCE7', left: 20, top: 20, rotation: -3, textColor: COLORS.primaryText}, {name: 'StickyNote', source: 'D3', desc: 'Colored note with rotation'}),
       {name: 'SystemWindow', source: 'P1', desc: 'macOS-window container', component: SystemWindow, props: {title: 'Window Title', accent: 'blue' as any, left: 20, top: 20, width: 280, height: 200, children: <div style={{fontFamily: FONTS.body, fontSize: 22, color: COLORS.primaryText}}>Content area</div>}},
-      {name: 'FileEditorWindow', source: 'P1', desc: 'VS Code-style editor', component: FileEditorWindow, props: {filename: 'index.ts', left: 20, top: 20, width: 280, height: 200, lines: [{number: 1, text: 'const msg = "hello"', accent: 'blue' as any}, {number: 2, text: 'export default msg'}], delay: 0}},
+      // TODO: PanelCard and SystemWindow entries can't use defineEntry because their demo props contain JSX children.
+      defineEntry(FileEditorWindow, {filename: 'index.ts', left: 20, top: 20, width: 280, height: 200, lines: [{number: 1, text: 'const msg = "hello"', accent: 'blue' as const}, {number: 2, text: 'export default msg'}], delay: 0}, {name: 'FileEditorWindow', source: 'P1', desc: 'VS Code-style editor'}),
       defineEntry(AgentWindow, {left: 20, top: 20, width: 280, height: 240}, {name: 'AgentWindow', source: 'P1', desc: 'Agent plan panel window'}),
       defineEntry(PipelineNode, {label: 'Step 1', sublabel: 'processing', accent: 'cyan' as any, left: 20, top: 20}, {name: 'PipelineNode', source: 'P1', desc: 'Step card with accent color'}),
     ],

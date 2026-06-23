@@ -323,7 +323,7 @@ When building a custom scene, extract a `revealProgress(frame, fps, startFrame, 
 
 ### Component composition rules
 
-1. **Always start from a template.** `SceneShell` or `LayoutFrame` gives you the canvas, PiP, and safe zones for free.
+1. **Always start from a template.** `SceneShell` or `LayoutFrame` gives you the canvas and safe zones for free.
 2. **Position content in the main content zone.** For D3: `x=390-990, y=260-1340` (when face PiP is active). For standalone scenes: `x=120-960, y=250-1370`.
 3. **Use `Sequence` for scene timing.** Each scene is a `<Sequence from={startFrame} durationInFrames={endFrame - startFrame}>`. Never hardcode frame numbers inside a scene component — use `D3_TIMELINE` or equivalent constants.
 4. **Keep caption text in the safe zone.** `y >= 1400` and `bottom padding = 280px`. Use `BigCaption` with default positioning.
