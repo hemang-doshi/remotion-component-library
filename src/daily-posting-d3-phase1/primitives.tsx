@@ -348,54 +348,59 @@ const FileEditorWindowImpl: React.FC<{
 };
 export const FileEditorWindow = React.memo(FileEditorWindowImpl);
 
-const AgentWindowImpl: React.FC<{
+export interface AgentWindowItem {
+  label: string;
+  accent?: Accent;
+  status?: string;
+}
+
+export interface AgentWindowProps {
   left: number;
   top: number;
   width: number;
   height: number;
   title?: string;
   delay?: number;
-}> = ({left, top, width, height, title = 'Agent Plan', delay = 0}) => {
-  const items = [
-    {label: 'Load repo instructions', accent: 'blue' as const},
-    {label: 'Check memory.lookup()', accent: 'purple' as const},
-    {label: 'Preserve prior correction', accent: 'green' as const},
-  ];
+  items?: AgentWindowItem[];
+}
 
-  return (
-    <SystemWindow title={title} accent="purple" left={left} top={top} width={width} height={height} delay={delay}>
-      <div style={{display: 'grid', gap: 14}}>
-        {items.map((item, index) => (
-          <div
-            key={item.label}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '16px 18px',
-              borderRadius: 18,
-              background: colors.secondaryPanel,
-              border: `1px solid ${colors.softBorder}`,
-            }}
-          >
-            <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
-              <div
-                style={{
-                  width: 14,
-                  height: 14,
-                  borderRadius: radii.pill,
-                  background: getAccent(item.accent),
-                }}
-              />
-              <span style={{fontFamily: fonts.sans, fontWeight: 750, fontSize: 23, color: colors.primaryText}}>{item.label}</span>
-            </div>
-            <StatusPill label={index === 1 ? 'running' : 'ready'} accent={index === 1 ? 'yellow' : item.accent} delay={delay + 6 + index * 4} />
+const defaultAgentItems: AgentWindowItem[] = [
+  {label: 'Load repo instructions', accent: 'blue', status: 'ready'},
+  {label: 'Check memory.lookup()', accent: 'purple', status: 'running'},
+  {label: 'Preserve prior correction', accent: 'green', status: 'ready'},
+];
+
+const AgentWindowImpl: React.FC<AgentWindowProps> = ({
+  left, top, width, height,
+  title = 'Agent Plan',
+  delay = 0,
+  items = defaultAgentItems,
+}) => (
+  <SystemWindow title={title} accent="purple" left={left} top={top} width={width} height={height} delay={delay}>
+    <div style={{display: 'grid', gap: 14}}>
+      {items.map((item, index) => (
+        <div
+          key={item.label}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '16px 18px', borderRadius: 18,
+            background: colors.secondaryPanel, border: `1px solid ${colors.softBorder}`,
+          }}
+        >
+          <div style={{display: 'flex', alignItems: 'center', gap: 12}}>
+            <div style={{width: 14, height: 14, borderRadius: radii.pill, background: getAccent(item.accent ?? 'blue')}} />
+            <span style={{fontFamily: fonts.sans, fontWeight: 750, fontSize: 23, color: colors.primaryText}}>{item.label}</span>
           </div>
-        ))}
-      </div>
-    </SystemWindow>
-  );
-};
+          <StatusPill
+            label={item.status ?? (index === 1 ? 'running' : 'ready')}
+            accent={(item.accent ?? (index === 1 ? 'yellow' as const : 'blue' as const)) as Accent}
+            delay={delay + 6 + index * 4}
+          />
+        </div>
+      ))}
+    </div>
+  </SystemWindow>
+);
 export const AgentWindow = React.memo(AgentWindowImpl);
 
 const PipelineNodeImpl: React.FC<{
@@ -475,45 +480,84 @@ const MemoryRecordImpl: React.FC<{
 };
 export const MemoryRecord = React.memo(MemoryRecordImpl);
 
-const RequirementDocumentImpl: React.FC<{
+export interface RequirementDocumentProps {
   left: number;
   top: number;
   width: number;
   height: number;
   delay?: number;
-}> = ({left, top, width, height, delay = 0}) => {
-  const bullets = ['Preserve repo rules across sessions', 'Prefer prior correction over repeating drift', 'Keep output readable above caption zone'];
+  title?: string;
+  bullets?: string[];
+}
 
-  return (
-    <SystemWindow title="Requirement Analysis" accent="orange" left={left} top={top} width={width} height={height} delay={delay}>
-      <div style={{display: 'grid', gap: 14}}>
-        {bullets.map((bullet, index) => (
-          <div
-            key={bullet}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '24px 1fr',
-              gap: 14,
-              alignItems: 'start',
-              padding: '6px 0',
-            }}
-          >
-            <div style={{width: 12, height: 12, borderRadius: radii.pill, background: index === 2 ? colors.yellow : colors.orange, marginTop: 10}} />
-            <div style={{fontFamily: fonts.sans, fontSize: 25, lineHeight: 1.28, fontWeight: 700, color: colors.primaryText}}>{bullet}</div>
-          </div>
-        ))}
-      </div>
-    </SystemWindow>
-  );
-};
+const defaultBullets = ['Preserve repo rules across sessions', 'Prefer prior correction over repeating drift', 'Keep output readable above caption zone'];
+
+const RequirementDocumentImpl: React.FC<RequirementDocumentProps> = ({
+  left, top, width, height, delay = 0,
+  title = 'Requirement Analysis',
+  bullets = defaultBullets,
+}) => (
+  <SystemWindow title={title} accent="orange" left={left} top={top} width={width} height={height} delay={delay}>
+    <div style={{display: 'grid', gap: 14}}>
+      {bullets.map((bullet, index) => (
+        <div
+          key={bullet}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '24px 1fr',
+            gap: 14,
+            alignItems: 'start',
+            padding: '6px 0',
+          }}
+        >
+          <div style={{width: 12, height: 12, borderRadius: radii.pill, background: index === 2 ? colors.yellow : colors.orange, marginTop: 10}} />
+          <div style={{fontFamily: fonts.sans, fontSize: 25, lineHeight: 1.28, fontWeight: 700, color: colors.primaryText}}>{bullet}</div>
+        </div>
+      ))}
+    </div>
+  </SystemWindow>
+);
 export const RequirementDocument = React.memo(RequirementDocumentImpl);
 
-const CodeDiffCardImpl: React.FC<{
+export type CodeDiffLineType = 'add' | 'remove' | 'neutral';
+
+export interface CodeDiffLine {
+  type: CodeDiffLineType;
+  text: string;
+}
+
+export interface CodeDiffCardProps {
   left: number;
   top: number;
   width: number;
   delay?: number;
-}> = ({left, top, width, delay = 0}) => {
+  title?: string;
+  badge?: string;
+  lines?: CodeDiffLine[];
+}
+
+const defaultDiffTitle = 'CodeDiffCard';
+const defaultBadge = '+ memory.lookup()';
+const defaultDiffLines: CodeDiffLine[] = [
+  {type: 'remove', text: 'repeated prompt restatement'},
+  {type: 'add', text: 'load prior failed attempt'},
+  {type: 'add', text: 'inject repo-specific preference pack'},
+];
+
+const diffLineColor = (type: CodeDiffLineType): string => {
+  switch (type) {
+    case 'add': return colors.green;
+    case 'remove': return colors.red;
+    case 'neutral': return colors.primaryText;
+  }
+};
+
+const CodeDiffCardImpl: React.FC<CodeDiffCardProps> = ({
+  left, top, width, delay = 0,
+  title = defaultDiffTitle,
+  badge = defaultBadge,
+  lines = defaultDiffLines,
+}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const progress = enterProgress(frame, fps, delay, motionSprings.controlled, 20);
@@ -521,57 +565,72 @@ const CodeDiffCardImpl: React.FC<{
   return (
     <div
       style={{
-        position: 'absolute',
-        left,
-        top,
-        width,
-        padding: 22,
-        borderRadius: 24,
-        ...cardBase,
+        position: 'absolute', left, top, width,
+        padding: 22, borderRadius: 24, ...cardBase,
         opacity: progress,
         transform: `translateY(${interpolate(progress, [0, 1], [16, 0])}px)`,
       }}
     >
       <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-        <div style={{fontFamily: fonts.mono, fontSize: 20, fontWeight: 800, color: colors.primaryText}}>CodeDiffCard</div>
-        <StatusPill label="+ memory.lookup()" accent="green" delay={delay + 4} />
+        <div style={{fontFamily: fonts.mono, fontSize: 20, fontWeight: 800, color: colors.primaryText}}>{title}</div>
+        <StatusPill label={badge} accent="green" delay={delay + 4} />
       </div>
       <div style={{marginTop: 16, display: 'grid', gap: 10, fontFamily: fonts.mono, fontSize: 20}}>
-        <div style={{color: colors.red}}>- repeated prompt restatement</div>
-        <div style={{color: colors.green}}>+ load prior failed attempt</div>
-        <div style={{color: colors.green}}>+ inject repo-specific preference pack</div>
+        {lines.map((line) => (
+          <div key={line.text} style={{color: diffLineColor(line.type)}}>
+            {line.type === 'add' ? '+ ' : line.type === 'remove' ? '- ' : '  '}{line.text}
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 export const CodeDiffCard = React.memo(CodeDiffCardImpl);
 
-const StorageModuleCardImpl: React.FC<{
+export interface StorageModuleItem {
+  label: string;
+  color?: string;
+}
+
+export interface StorageModuleCardProps {
   left: number;
   top: number;
   width: number;
   delay?: number;
-}> = ({left, top, width, delay = 0}) => (
-  <SystemWindow title="Memory Layer" accent="green" left={left} top={top} width={width} height={230} delay={delay}>
+  title?: string;
+  items?: StorageModuleItem[];
+}
+
+const defaultStorageItems: StorageModuleItem[] = [
+  {label: 'Preferences', color: colors.green},
+  {label: 'Decisions', color: colors.orange},
+  {label: 'Mistakes', color: colors.pink},
+];
+
+const StorageModuleCardImpl: React.FC<StorageModuleCardProps> = ({
+  left, top, width, delay = 0,
+  title = 'Memory Layer',
+  items = defaultStorageItems,
+}) => (
+  <SystemWindow title={title} accent="green" left={left} top={top} width={width} height={230} delay={delay}>
     <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14}}>
-      {[
-        ['Preferences', colors.green],
-        ['Decisions', colors.orange],
-        ['Mistakes', colors.pink],
-      ].map(([label, color]) => (
-        <div
-          key={label}
-          style={{
-            padding: '24px 16px',
-            borderRadius: 20,
-            border: `1px solid ${color}44`,
-            background: `${color}12`,
-            textAlign: 'center',
-          }}
-        >
-          <div style={{fontFamily: fonts.sans, fontSize: 24, fontWeight: 800, color: colors.primaryText}}>{label}</div>
-        </div>
-      ))}
+      {items.map((item) => {
+        const itemColor = item.color ?? colors.green;
+        return (
+          <div
+            key={item.label}
+            style={{
+              padding: '24px 16px',
+              borderRadius: 20,
+              border: `1px solid ${itemColor}44`,
+              background: `${itemColor}12`,
+              textAlign: 'center',
+            }}
+          >
+            <div style={{fontFamily: fonts.sans, fontSize: 24, fontWeight: 800, color: colors.primaryText}}>{item.label}</div>
+          </div>
+        );
+      })}
     </div>
   </SystemWindow>
 );
@@ -682,10 +741,18 @@ const NotebookTapeImpl: React.FC<{left: number; top: number; rotate?: number}> =
 );
 export const NotebookTape = React.memo(NotebookTapeImpl);
 
-const LayoutFrameImpl: React.FC<{children: React.ReactNode}> = ({children}) => (
+export interface LayoutFrameProps {
+  children: React.ReactNode;
+  showGuides?: boolean;
+}
+
+const LayoutFrameImpl: React.FC<LayoutFrameProps> = ({
+  children,
+  showGuides = false,
+}) => (
   <AbsoluteFill>
     <BoardCanvas />
-    <CaptionSafeGuide />
+    {showGuides ? <CaptionSafeGuide /> : null}
     <NotebookTape left={176} top={676} rotate={-8} />
     <NotebookTape left={858} top={720} rotate={12} />
     {children}
