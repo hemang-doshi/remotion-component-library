@@ -1,0 +1,23 @@
+{
+  "name": "remotion-component-library",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "build": "remotion render src/index.ts ComponentBrowser out/browser.mp4"
+  },
+  "dependencies": {
+    "@remotion/bundler": "^4.0.366",
+    "@remotion/renderer": "^4.0.366",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "remotion": "^4.0.366"
+  },
+  "devDependencies": {
+    "@remotion/cli": "^4.0.366",
+    "@types/node": "^24.0.7",
+    "@types/react": "^19.1.8",
+    "typescript": "^5.8.3"
+  }
+}
