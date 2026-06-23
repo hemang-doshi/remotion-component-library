@@ -39,3 +39,18 @@ import {SystemWindow, StatusPill} from './daily-posting-d3-phase1/primitives';
 ```
 
 All components are pure functions of `useCurrentFrame()` — no side effects, no async state.
+
+## Agent Usage
+
+Agents should read `AGENTS.md` and `COMPONENT_LIBRARY_SKILL.md` before creating new Remotion scenes.
+
+Prefer composing existing primitives over writing custom UI.
+
+Use `showGuides={true}` only while positioning content. Keep guides disabled for final renders.
+
+## Verification
+
+```sh
+npm run typecheck
+npm run render:browser
+```
