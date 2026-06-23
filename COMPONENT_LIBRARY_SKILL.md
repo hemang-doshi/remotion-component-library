@@ -144,17 +144,21 @@ The standard scene wrapper. Used in all 13 D3 scenes:
 import {AbsoluteFill} from 'remotion';
 import {BoardCanvas, PipFrame, FaceBubbleSafeArea} from './components/BoardPrimitives';
 
-const SceneShell: React.FC<{accent: string; children: React.ReactNode}> = ({accent, children}) => (
+const SceneShell: React.FC<{
+  accent: string;
+  children: React.ReactNode;
+  showGuides?: boolean;
+}> = ({accent, children, showGuides = false}) => (
   <AbsoluteFill>
     <BoardCanvas accent={accent} />
     {children}
-    <PipFrame />
-    <FaceBubbleSafeArea />
+    <PipFrame showGuide={showGuides} />
+    <FaceBubbleSafeArea showGuide={showGuides} />
   </AbsoluteFill>
 );
 ```
 
-This gives you the animated background + PiP overlay + safe zone guides. Every scene gets these for free.
+Set `showGuides={true}` while positioning elements. Keep it false for final renders.
 
 ### LayoutFrame (Phase 1 pattern)
 
@@ -297,20 +301,21 @@ const transitionProgress = spring({
 </AbsoluteFill>
 ```
 
-Transition duration: 20–30 frames. Use `spring()` for smooth ease, not linear `interpolate()`.
+Transition duration: 20–30 frames. Use `spring()` from remotion for smooth ease.
 
-### The `progressSpring` / `enterProgress` helper
+### The `enterProgress` helper
 
-Both libraries have a shared utility:
+Import from `src/motion.ts`:
+
 ```ts
-const progressSpring = (frame, fps, delay = 0, config = {damping:13, stiffness:90}) =>
-  spring({
-    frame: Math.max(0, frame - delay), fps,
-    config,
-    durationInFrames: 24,
-  });
+import {enterProgress, motionSprings} from '../motion';
 ```
-Use this for any custom element you write. It handles frame offset and duration consistently with the rest of the library.
+
+```ts
+enterProgress(frame, fps, delay = 0, config = {damping:13, stiffness:90}, durationInFrames = 24)
+```
+
+This handles frame offset and duration consistently with the rest of the library.
 
 When building a custom scene, extract a `revealProgress(frame, fps, startFrame, durationInFrames, config?)` helper to manage staggered entrances cleanly instead of writing inline spring calls for each element.
 
@@ -353,7 +358,7 @@ If the answer to any of these is yes, use the existing component.
 These apply on top of the general /remotion-best-practices:
 - All components are pure functions of `useCurrentFrame()` — no async, no side effects, no `useState`/`useEffect` in scene code
 - Use `spring()` for entrances, not raw `interpolate()` — springs handle easing naturally and look more polished
-- Prefers `progressSpring()` helper pattern for consistent animation across scenes
+- Prefers `enterProgress()` helper pattern for consistent animation across scenes
 - SVG connectors (`FlowWire`, `FlowCable`, `DoodleArrow`) use `pathLength=1` + `strokeDasharray="1"` + `strokeDashoffset` for draw animations
 - Use `<Sequence>` for time-based composition, not conditional rendering with `frame > x`
 - Scenes must be deterministic — same frame always produces the same render
