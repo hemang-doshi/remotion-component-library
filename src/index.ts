@@ -42,6 +42,23 @@ export {
   LayoutFrame,
 } from './daily-posting-d3-phase1/primitives';
 
+export type {
+  LayoutFrameProps,
+  AgentWindowItem,
+  AgentWindowProps,
+  RequirementDocumentProps,
+  CodeDiffLineType,
+  CodeDiffLine,
+  CodeDiffCardProps,
+  StorageModuleItem,
+  StorageModuleCardProps,
+  SystemWindowProps,
+  StatusPillProps,
+  SceneTitleProps,
+  FileEditorWindowProps,
+  FileEditorWindowLine,
+} from './daily-posting-d3-phase1/primitives';
+
 // Design tokens
 export * from './daily-posting-d3/style';
 export * from './daily-posting-d3/timeline';

@@ -80,7 +80,7 @@ const BoardCanvasImpl: React.FC<{accent?: string}> = ({accent = colors.blue}) =>
 };
 export const BoardCanvas = React.memo(BoardCanvasImpl);
 
-const SceneTitleImpl: React.FC<{
+export interface SceneTitleProps {
   label: string;
   title: string;
   subtitle: string;
@@ -88,7 +88,9 @@ const SceneTitleImpl: React.FC<{
   left?: number;
   top?: number;
   delay?: number;
-}> = ({label, title, subtitle, accent = 'blue', left = 98, top = 122, delay = 0}) => {
+}
+
+const SceneTitleImpl: React.FC<SceneTitleProps> = ({label, title, subtitle, accent = 'blue', left = 98, top = 122, delay = 0}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const progress = enterProgress(frame, fps, delay, motionSprings.standard);
@@ -154,7 +156,13 @@ const SceneTitleImpl: React.FC<{
 };
 export const SceneTitle = React.memo(SceneTitleImpl);
 
-const StatusPillImpl: React.FC<{label: string; accent?: Accent; delay?: number}> = ({label, accent = 'green', delay = 0}) => {
+export interface StatusPillProps {
+  label: string;
+  accent?: Accent;
+  delay?: number;
+}
+
+const StatusPillImpl: React.FC<StatusPillProps> = ({label, accent = 'green', delay = 0}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const progress = enterProgress(frame, fps, delay, motionSprings.controlled, 18);
@@ -234,7 +242,7 @@ const StateChangeBadgeImpl: React.FC<{from: string; to: string; accent?: Accent;
 };
 export const StateChangeBadge = React.memo(StateChangeBadgeImpl);
 
-const SystemWindowImpl: React.FC<{
+export interface SystemWindowProps {
   title: string;
   accent?: Accent;
   left: number;
@@ -243,7 +251,11 @@ const SystemWindowImpl: React.FC<{
   height: number;
   delay?: number;
   children?: React.ReactNode;
-}> = ({title, accent = 'blue', left, top, width, height, delay = 0, children}) => {
+}
+
+const SystemWindowImpl: React.FC<SystemWindowProps> = ({
+  title, accent = 'blue', left, top, width, height, delay = 0, children,
+}) => {
   const frame = useCurrentFrame();
   const {fps} = useVideoConfig();
   const progress = enterProgress(frame, fps, delay, motionSprings.standard, 24);
@@ -300,15 +312,25 @@ const SystemWindowImpl: React.FC<{
 };
 export const SystemWindow = React.memo(SystemWindowImpl);
 
-const FileEditorWindowImpl: React.FC<{
+export interface FileEditorWindowLine {
+  number: number;
+  text: string;
+  accent?: Accent;
+}
+
+export interface FileEditorWindowProps {
   left: number;
   top: number;
   width: number;
   height: number;
   filename: string;
-  lines: Array<{number: number; text: string; accent?: Accent}>;
+  lines: FileEditorWindowLine[];
   delay?: number;
-}> = ({left, top, width, height, filename, lines, delay = 0}) => {
+}
+
+const FileEditorWindowImpl: React.FC<FileEditorWindowProps> = ({
+  left, top, width, height, filename, lines, delay = 0,
+}) => {
   return (
     <SystemWindow title={filename} accent="blue" left={left} top={top} width={width} height={height} delay={delay}>
       <div
