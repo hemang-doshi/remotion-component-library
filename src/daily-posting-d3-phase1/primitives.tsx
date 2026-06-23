@@ -1,6 +1,7 @@
 import React from 'react';
-import {AbsoluteFill, Easing, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
-import {colors, D3P1_HEIGHT, D3P1_SAFE, D3P1_WIDTH, fonts, motionSprings, radii, shadows, spacing} from './tokens';
+import {AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
+import {colors, D3P1_HEIGHT, D3P1_SAFE, D3P1_WIDTH, fonts, radii, shadows, spacing} from './tokens';
+import {enterProgress, motionSprings} from '../motion';
 
 type Accent = keyof Pick<typeof colors, 'blue' | 'cyan' | 'green' | 'yellow' | 'pink' | 'purple' | 'orange' | 'red'>;
 
@@ -16,20 +17,6 @@ const accentShadowMap: Record<Accent, string> = {
 };
 
 const getAccent = (accent: Accent | string) => (accent in colors ? colors[accent as keyof typeof colors] : accent);
-
-const enterProgress = (
-  frame: number,
-  fps: number,
-  delay: number,
-  config: (typeof motionSprings)[keyof typeof motionSprings] = motionSprings.standard,
-  durationInFrames = 24,
-) =>
-  spring({
-    frame: Math.max(0, frame - delay),
-    fps,
-    config,
-    durationInFrames,
-  });
 
 const cardBase: React.CSSProperties = {
   background: colors.panel,

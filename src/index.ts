@@ -45,5 +45,19 @@ export {
 // Design tokens
 export * from './daily-posting-d3/style';
 export * from './daily-posting-d3/timeline';
-export * from './daily-posting-d3-phase1/tokens';
+export {
+  D3P1_WIDTH,
+  D3P1_HEIGHT,
+  D3P1_FPS,
+  D3P1_STYLE_SANDBOX_FRAMES,
+  D3P1_SAFE,
+  colors,
+  spacing,
+  radii,
+  fonts,
+  shadows,
+} from './daily-posting-d3-phase1/tokens';
+
+// Shared motion helpers
+export * from './motion';
 

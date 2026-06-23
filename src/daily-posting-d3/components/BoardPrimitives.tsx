@@ -1,29 +1,8 @@
 import React from 'react';
-import {AbsoluteFill, Easing, interpolate, spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig} from 'remotion';
 import {COLORS, FONTS, fullFrame, safeFrame, SHADOWS} from '../style';
 import {SAFE_ZONES} from '../timeline';
-
-const motionSprings = {
-  standard: {damping: 13, stiffness: 90},
-  punchy: {damping: 10, stiffness: 120},
-  controlled: {damping: 18, stiffness: 110, mass: 0.9},
-  click: {damping: 16, stiffness: 180},
-} as const;
-
-type SpringConfig = (typeof motionSprings)[keyof typeof motionSprings];
-
-const progressSpring = (
-  frame: number,
-  fps: number,
-  delay = 0,
-  config: SpringConfig = motionSprings.standard,
-) =>
-  spring({
-    frame: Math.max(0, frame - delay),
-    fps,
-    config,
-    durationInFrames: 24,
-  });
+import {enterProgress as progressSpring, motionSprings} from '../../motion';
 
 const BoardCanvasImpl: React.FC<{accent?: string; subtle?: boolean}> = ({
   accent = COLORS.blue,
