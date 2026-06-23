@@ -45,6 +45,18 @@ interface ComponentEntry {
   source: 'D3' | 'P1';
 }
 
+const defineEntry = <P extends Record<string, unknown>>(
+  component: React.ComponentType<P>,
+  props: P,
+  meta: {name: string; desc: string; source: 'D3' | 'P1'},
+): ComponentEntry => ({
+  component: component as React.ComponentType<any>,
+  props: props as Record<string, unknown>,
+  name: meta.name,
+  desc: meta.desc,
+  source: meta.source,
+});
+
 // ─── Card preview ──────────────────────────────────────────────────
 const CARD_W = 480;
 const CARD_PREVIEW_H = 360;
@@ -165,12 +177,12 @@ const CATEGORIES: Array<{
     name: 'Layout & Canvas',
     accent: C.blue,
     entries: [
-      {name: 'BoardCanvas', source: 'D3', desc: 'Canvas bg with animated glow', component: D3BoardCanvas, props: {accent: C.blue}},
-      {name: 'BoardCanvas (P1)', source: 'P1', desc: 'Phase 1 canvas variant', component: P1BoardCanvas, props: {accent: C.cyan}},
-      {name: 'FaceBubbleSafeArea', source: 'D3', desc: 'Red dashed face-pip guide', component: FaceBubbleSafeArea, props: {showGuide: true}},
-      {name: 'PipFrame', source: 'D3', desc: 'White glass PiP frame', component: PipFrame, props: {showGuide: true}},
-      {name: 'CaptionSafeGuide', source: 'P1', desc: 'Caption safe-zone border', component: CaptionSafeGuide, props: {}},
-      {name: 'LayoutFrame', source: 'P1', desc: 'Canvas + guide + tape wrapper', component: LayoutFrame, props: {}},
+      defineEntry(D3BoardCanvas, {accent: C.blue}, {name: 'BoardCanvas', source: 'D3', desc: 'Canvas bg with animated glow'}),
+      defineEntry(P1BoardCanvas, {accent: C.cyan}, {name: 'BoardCanvas (P1)', source: 'P1', desc: 'Phase 1 canvas variant'}),
+      defineEntry(FaceBubbleSafeArea, {showGuide: true}, {name: 'FaceBubbleSafeArea', source: 'D3', desc: 'Red dashed face-pip guide'}),
+      defineEntry(PipFrame, {showGuide: true}, {name: 'PipFrame', source: 'D3', desc: 'White glass PiP frame'}),
+      defineEntry(CaptionSafeGuide, {}, {name: 'CaptionSafeGuide', source: 'P1', desc: 'Caption safe-zone border'}),
+      defineEntry(LayoutFrame, {children: null as unknown as React.ReactNode}, {name: 'LayoutFrame', source: 'P1', desc: 'Canvas + guide + tape wrapper'}),
     ],
   },
   {
@@ -178,12 +190,12 @@ const CATEGORIES: Array<{
     name: 'Text & Typography',
     accent: C.purple,
     entries: [
-      {name: 'EyebrowChip', source: 'D3', desc: 'Mono uppercase label with border', component: EyebrowChip, props: {label: 'Hello World', color: C.blue, left: 20, top: 20}},
-      {name: 'EditorialHeadline', source: 'D3', desc: 'Title + subtitle spring entrance', component: EditorialHeadline, props: {title: 'Component\nTitle', subtitle: 'Subtitle text for this demo', left: 20, top: 40, maxWidth: 500}},
-      {name: 'SceneTitle', source: 'P1', desc: 'Eyebrow + title + subtitle block', component: SceneTitle, props: {label: 'Demo', title: 'Scene Title', subtitle: 'Descriptive subtitle for this component', left: 20, top: 40}},
-      {name: 'StatusPill', source: 'P1', desc: 'Colored dot status badge', component: StatusPill, props: {label: 'Active'}},
-      {name: 'StateChangeBadge', source: 'P1', desc: 'From→to animated state badge', component: StateChangeBadge, props: {from: 'running', to: 'verified', delay: 8}},
-      {name: 'BigCaption', source: 'D3', desc: 'Bottom-safe caption text', component: BigCaption, props: {children: 'Big caption text positioned at safe zone', top: 80}},
+      defineEntry(EyebrowChip, {label: 'Hello World', color: C.blue, left: 20, top: 20}, {name: 'EyebrowChip', source: 'D3', desc: 'Mono uppercase label with border'}),
+      defineEntry(EditorialHeadline, {title: 'Component\nTitle', subtitle: 'Subtitle text for this demo', left: 20, top: 40, maxWidth: 500}, {name: 'EditorialHeadline', source: 'D3', desc: 'Title + subtitle spring entrance'}),
+      defineEntry(SceneTitle, {label: 'Demo', title: 'Scene Title', subtitle: 'Descriptive subtitle for this component', left: 20, top: 40}, {name: 'SceneTitle', source: 'P1', desc: 'Eyebrow + title + subtitle block'}),
+      defineEntry(StatusPill, {label: 'Active'}, {name: 'StatusPill', source: 'P1', desc: 'Colored dot status badge'}),
+      defineEntry(StateChangeBadge, {from: 'running', to: 'verified', delay: 8}, {name: 'StateChangeBadge', source: 'P1', desc: 'From→to animated state badge'}),
+      defineEntry(BigCaption, {children: 'Big caption text positioned at safe zone', top: 80}, {name: 'BigCaption', source: 'D3', desc: 'Bottom-safe caption text'}),
     ],
   },
   {
@@ -192,11 +204,11 @@ const CATEGORIES: Array<{
     accent: C.green,
     entries: [
       {name: 'PanelCard', source: 'D3', desc: 'Rounded card with accent bar', component: PanelCard, props: {left: 20, top: 20, width: 280, eyebrow: 'INFO', title: 'Card Title', children: <div style={{fontFamily: FONTS.body, fontSize: 24, color: COLORS.mutedText}}>Card content area</div>}},
-      {name: 'StickyNote', source: 'D3', desc: 'Colored note with rotation', component: StickyNote, props: {label: 'Sticky Note', color: '#DCFCE7', left: 20, top: 20, rotation: -3, textColor: COLORS.primaryText}},
+      defineEntry(StickyNote, {label: 'Sticky Note', color: '#DCFCE7', left: 20, top: 20, rotation: -3, textColor: COLORS.primaryText}, {name: 'StickyNote', source: 'D3', desc: 'Colored note with rotation'}),
       {name: 'SystemWindow', source: 'P1', desc: 'macOS-window container', component: SystemWindow, props: {title: 'Window Title', accent: 'blue' as any, left: 20, top: 20, width: 280, height: 200, children: <div style={{fontFamily: FONTS.body, fontSize: 22, color: COLORS.primaryText}}>Content area</div>}},
       {name: 'FileEditorWindow', source: 'P1', desc: 'VS Code-style editor', component: FileEditorWindow, props: {filename: 'index.ts', left: 20, top: 20, width: 280, height: 200, lines: [{number: 1, text: 'const msg = "hello"', accent: 'blue' as any}, {number: 2, text: 'export default msg'}], delay: 0}},
-      {name: 'AgentWindow', source: 'P1', desc: 'Agent plan panel window', component: AgentWindow, props: {left: 20, top: 20, width: 280, height: 240}},
-      {name: 'PipelineNode', source: 'P1', desc: 'Step card with accent color', component: PipelineNode, props: {label: 'Step 1', sublabel: 'processing', accent: 'cyan' as any, left: 20, top: 20}},
+      defineEntry(AgentWindow, {left: 20, top: 20, width: 280, height: 240}, {name: 'AgentWindow', source: 'P1', desc: 'Agent plan panel window'}),
+      defineEntry(PipelineNode, {label: 'Step 1', sublabel: 'processing', accent: 'cyan' as any, left: 20, top: 20}, {name: 'PipelineNode', source: 'P1', desc: 'Step card with accent color'}),
     ],
   },
   {
@@ -204,12 +216,12 @@ const CATEGORIES: Array<{
     name: 'Data & Composites',
     accent: C.orange,
     entries: [
-      {name: 'MemoryRecord', source: 'P1', desc: 'Sticky-note record card', component: MemoryRecord, props: {title: 'Preference', detail: 'Use minimal diffs', left: 20, top: 20}},
-      {name: 'MetricRow', source: 'D3', desc: 'Label + value row with dot', component: MetricRow, props: {label: 'Requests', value: '1,234', color: C.green}},
-      {name: 'SystemList', source: 'D3', desc: 'PanelCard + MetricRows', component: SystemList, props: {left: 20, top: 20, width: 280, delay: 0, items: [{label: 'Memory', detail: '64 GB', color: C.cyan}, {label: 'Storage', detail: '512 GB', color: C.green}, {label: 'Network', detail: '1 Gbps', color: C.blue}]}},
-      {name: 'CodeDiffCard', source: 'P1', desc: 'Code diff insert/delete', component: CodeDiffCard, props: {left: 20, top: 20, width: 280}},
-      {name: 'StorageModuleCard', source: 'P1', desc: '3-col storage categories', component: StorageModuleCard, props: {left: 20, top: 20, width: 280}},
-      {name: 'RequirementDocument', source: 'P1', desc: 'Requirement bullets', component: RequirementDocument, props: {left: 20, top: 20, width: 280, height: 200}},
+      defineEntry(MemoryRecord, {title: 'Preference', detail: 'Use minimal diffs', left: 20, top: 20}, {name: 'MemoryRecord', source: 'P1', desc: 'Sticky-note record card'}),
+      defineEntry(MetricRow, {label: 'Requests', value: '1,234', color: C.green}, {name: 'MetricRow', source: 'D3', desc: 'Label + value row with dot'}),
+      defineEntry(SystemList, {left: 20, top: 20, width: 280, delay: 0, items: [{label: 'Memory', detail: '64 GB', color: C.cyan}, {label: 'Storage', detail: '512 GB', color: C.green}, {label: 'Network', detail: '1 Gbps', color: C.blue}]}, {name: 'SystemList', source: 'D3', desc: 'PanelCard + MetricRows'}),
+      defineEntry(CodeDiffCard, {left: 20, top: 20, width: 280}, {name: 'CodeDiffCard', source: 'P1', desc: 'Code diff insert/delete'}),
+      defineEntry(StorageModuleCard, {left: 20, top: 20, width: 280}, {name: 'StorageModuleCard', source: 'P1', desc: '3-col storage categories'}),
+      defineEntry(RequirementDocument, {left: 20, top: 20, width: 280, height: 200}, {name: 'RequirementDocument', source: 'P1', desc: 'Requirement bullets'}),
     ],
   },
   {
@@ -217,12 +229,12 @@ const CATEGORIES: Array<{
     name: 'SVG & Terminal',
     accent: C.pink,
     entries: [
-      {name: 'FlowCable', source: 'P1', desc: 'Animated SVG connector line', component: FlowCable, props: {points: [[20, 60], [140, 120], [260, 60]] as Array<[number, number]>, accent: 'cyan' as any}},
-      {name: 'FlowWire', source: 'D3', desc: '3-layer glow SVG wire', component: FlowWire, props: {d: DEMO_WIRE_D, color: C.cyan}},
-      {name: 'DoodleArrow', source: 'D3', desc: 'Hand-drawn SVG arrow', component: DoodleArrow, props: {d: DEMO_ARROW_D, color: C.orange}},
-      {name: 'CursorActor', source: 'P1', desc: 'Animated cursor SVG', component: CursorActor, props: {from: [20, 20] as [number, number], to: [180, 80] as [number, number], startFrame: 0, endFrame: 30, dragging: true}},
-      {name: 'NotebookTape', source: 'P1', desc: 'Decorative tape strip', component: NotebookTape, props: {left: 80, top: 80, rotate: -8}},
-      {name: 'TerminalCard', source: 'D3', desc: 'Terminal with typewriter lines', component: TerminalCard, props: {code: ['memory.query({', '  task: "demo"', '})'], left: 20, top: 20, width: 280}},
+      defineEntry(FlowCable, {points: [[20, 60], [140, 120], [260, 60]] as Array<[number, number]>, accent: 'cyan' as any}, {name: 'FlowCable', source: 'P1', desc: 'Animated SVG connector line'}),
+      defineEntry(FlowWire, {d: DEMO_WIRE_D, color: C.cyan}, {name: 'FlowWire', source: 'D3', desc: '3-layer glow SVG wire'}),
+      defineEntry(DoodleArrow, {d: DEMO_ARROW_D, color: C.orange}, {name: 'DoodleArrow', source: 'D3', desc: 'Hand-drawn SVG arrow'}),
+      defineEntry(CursorActor, {from: [20, 20] as [number, number], to: [180, 80] as [number, number], startFrame: 0, endFrame: 30, dragging: true}, {name: 'CursorActor', source: 'P1', desc: 'Animated cursor SVG'}),
+      defineEntry(NotebookTape, {left: 80, top: 80, rotate: -8}, {name: 'NotebookTape', source: 'P1', desc: 'Decorative tape strip'}),
+      defineEntry(TerminalCard, {code: ['memory.query({', '  task: "demo"', '})'], left: 20, top: 20, width: 280}, {name: 'TerminalCard', source: 'D3', desc: 'Terminal with typewriter lines'}),
     ],
   },
 ];
