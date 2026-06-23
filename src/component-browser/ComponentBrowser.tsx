@@ -288,8 +288,12 @@ const PageCaption: React.FC<{
   );
 };
 
+// ─── Exported constants ────────────────────────────────────────────
+export const COMPONENT_BROWSER_FRAMES_PER_PAGE = 240;
+export const COMPONENT_BROWSER_DURATION = CATEGORIES.length * COMPONENT_BROWSER_FRAMES_PER_PAGE;
+const FRAMES_PER_PAGE = COMPONENT_BROWSER_FRAMES_PER_PAGE;
+
 // ─── Component Browser ─────────────────────────────────────────────
-const FRAMES_PER_PAGE = 240;
 
 export const ComponentBrowser: React.FC = () => {
   const frame = useCurrentFrame();

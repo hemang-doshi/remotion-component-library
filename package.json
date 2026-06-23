@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "studio": "remotion studio src/index.ts",
-    "build": "remotion render src/index.ts ComponentBrowser out/browser.mp4"
+    "render:browser": "remotion render src/index.ts ComponentBrowser out/browser.mp4",
+    "build": "npm run render:browser",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@remotion/bundler": "^4.0.366",
